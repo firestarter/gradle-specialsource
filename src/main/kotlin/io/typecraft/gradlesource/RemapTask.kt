@@ -3,12 +3,11 @@ package io.typecraft.gradlesource
 import net.md_5.specialsource.Jar
 import net.md_5.specialsource.JarMapping
 import net.md_5.specialsource.JarRemapper
+import net.md_5.specialsource.provider.JarProvider
+import net.md_5.specialsource.provider.JointProvider
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.RegularFile
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 
 /**
@@ -47,6 +46,9 @@ abstract class RemapTask : DefaultTask() {
     @get:InputFile
     abstract val mappingFile: RegularFileProperty
 
+    @get:InputFile
+    abstract val inheritanceProvider: RegularFileProperty
+
     /**
      * Input whether reverse or not. Defaults to `false`.
      *
@@ -64,6 +66,12 @@ abstract class RemapTask : DefaultTask() {
         val rev = reverse.getOrElse(false)
         val mappingPath = mappingFile.asFile.get().absolutePath
         mapping.loadMappings(mappingPath, rev, false, null, null)
+
+        val providers = JointProvider()
+        providers.add(JarProvider(Jar.init(inheritanceProvider.get().asFile)))
+        providers.add(JarProvider(Jar.init(inJarFile.get().asFile)))
+        mapping.setFallbackInheritanceProvider(providers)
+
         val jarMap = JarRemapper(null, mapping, null)
         Jar.init(inJarFile.asFile.get()).use { jar ->
             jarMap.remapJar(jar, outJarFile.get().asFile)

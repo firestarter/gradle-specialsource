@@ -4,7 +4,6 @@ import io.typecraft.gradlesource.RemapTask
 import io.typecraft.gradlesource.archiveNameFromTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
@@ -49,10 +48,16 @@ class SpigotRemapPlugin : Plugin<Project> {
                     dir.file(archiveName.toFileName())
                 }
             })
-            mappingFile.set(p.layout.file(spigotRemapExt.spigotVersionExact.map { ver ->
+            mappingFile.set(p.layout.file(spigotRemapExt.spigotVersion.map { ver ->
                 // NOTE(detachedConfiguration): https://github.com/spring-gradle-plugins/dependency-management-plugin/issues/222#issuecomment-411005109
                 val config = p.configurations.detachedConfiguration(
                     p.dependencies.create("org.spigotmc:minecraft-server:${ver}:maps-mojang@txt")
+                )
+                config.singleFile
+            }))
+            inheritanceProvider.set(p.layout.file(spigotRemapExt.spigotVersion.map { ver ->
+                val config = p.configurations.detachedConfiguration(
+                    p.dependencies.create("org.spigotmc:spigot:${ver}:remapped-mojang@jar")
                 )
                 config.singleFile
             }))
@@ -68,9 +73,15 @@ class SpigotRemapPlugin : Plugin<Project> {
                     dir.file(archiveName.toFileName())
                 }
             })
-            mappingFile.set(p.layout.file(spigotRemapExt.spigotVersionExact.map { ver ->
+            mappingFile.set(p.layout.file(spigotRemapExt.spigotVersion.map { ver ->
                 val config = p.configurations.detachedConfiguration(
                     p.dependencies.create("org.spigotmc:minecraft-server:${ver}:maps-spigot@csrg")
+                )
+                config.singleFile
+            }))
+            inheritanceProvider.set(p.layout.file(spigotRemapExt.spigotVersion.map { ver ->
+                val config = p.configurations.detachedConfiguration(
+                    p.dependencies.create("org.spigotmc:spigot:${ver}:remapped-obf@jar")
                 )
                 config.singleFile
             }))

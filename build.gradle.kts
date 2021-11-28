@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.typecraft"
-version = "1.0.0"
+version = "1.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("net.md-5:SpecialSource:1.10.0")
+    implementation("net.md-5:SpecialSource:1.11.0")
     compileOnly(fileTree("libs") {
         include("*.jar")
     })

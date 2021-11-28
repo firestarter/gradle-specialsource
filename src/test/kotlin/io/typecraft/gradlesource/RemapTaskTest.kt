@@ -16,7 +16,7 @@ class RemapTaskTest {
      */
     @Test
     fun remap(@TempDir dir: File) {
-        val pluginVersion = System.getenv("GRADLE_SPECIALSOURCE_VERSION")
+        // val pluginVersion = System.getenv("GRADLE_SPECIALSOURCE_VERSION")
         val homeDir = System.getProperty("user.home").replace("\\", "/")
         val mojang2ObfMappingPath =
             "${homeDir}/.m2/repository/org/spigotmc/minecraft-server/1.17.1-R0.1-SNAPSHOT/minecraft-server-1.17.1-R0.1-SNAPSHOT-maps-mojang.txt".replace(
