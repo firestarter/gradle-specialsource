@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
     `java-gradle-plugin`
@@ -7,7 +9,7 @@ plugins {
 }
 
 group = "io.typecraft"
-version = "1.0.1-SNAPSHOT"
+version = "1.0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -43,5 +45,18 @@ pluginBundle {
 tasks {
     test {
         useJUnitPlatform()
+    }
+}
+
+tasks.withType<JavaCompile> {
+    sourceCompatibility = "16"
+    targetCompatibility = "16"
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "16"
     }
 }
